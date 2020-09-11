@@ -1,0 +1,204 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{05661469-C101-4077-A53B-5412B8415D57}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>KombiCim.Data</RootNamespace>
+    <AssemblyName>KombiCim.Data</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Exceptions\RepositoryException.cs" />
+    <Compile Include="Exceptions\RepositoryExceptionType.cs" />
+    <Compile Include="Models\ApiAuthType.cs">
+      <DependentUpon>KombiCimModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ApiToken.cs">
+      <DependentUpon>KombiCimModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ApiUser.cs">
+      <DependentUpon>KombiCimModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Arduino\Dtos\ProfilePreferenceDto.cs" />
+    <Compile Include="Models\Arduino\Requests\BaseDeviceRequest.cs" />
+    <Compile Include="Models\Arduino\DateTimeCustom.cs" />
+    <Compile Include="Models\Arduino\Responses\BaseDeviceResponse.cs" />
+    <Compile Include="Models\Arduino\Responses\GuidResponse.cs" />
+    <Compile Include="Models\Arduino\Dtos\LocationDto.cs" />
+    <Compile Include="Models\Arduino\Dtos\MinTemperatureDto.cs" />
+    <Compile Include="Models\Arduino\Requests\PostCombiLogRequest.cs" />
+    <Compile Include="Models\Arduino\Requests\PostDeviceRequest.cs" />
+    <Compile Include="Models\Arduino\Responses\PostDeviceResponse.cs" />
+    <Compile Include="Models\CombiLog.cs">
+      <DependentUpon>KombiCimModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Device.cs">
+      <DependentUpon>KombiCimModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DeviceType.cs">
+      <DependentUpon>KombiCimModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\KombiCimModel.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>KombiCimModel.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\KombiCimModel.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>KombiCimModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\KombiCimModel.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>KombiCimModel.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Models\KombiCimModelCodeFirst.cs" />
+    <Compile Include="Models\Location.cs">
+      <DependentUpon>KombiCimModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\MinOperator.cs">
+      <DependentUpon>KombiCimModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\MinTemperature.cs">
+      <DependentUpon>KombiCimModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Mobile\Dtos\CombiLogDto.cs" />
+    <Compile Include="Models\Mobile\Requests\PostMinTemperatureRequest.cs" />
+    <Compile Include="Models\Mobile\Requests\SetStateRequest.cs" />
+    <Compile Include="Models\Mobile\Requests\SetActiveProfileRequest.cs" />
+    <Compile Include="Models\Mobile\Responses\GetCombiLogResponse.cs" />
+    <Compile Include="Models\Mobile\Responses\GetProfilesResponse.cs" />
+    <Compile Include="Models\Mobile\Responses\PostMinTemperatureResponse.cs" />
+    <Compile Include="Models\Arduino\Dtos\ProfileDto.cs" />
+    <Compile Include="Models\Arduino\Dtos\SettingsDto.cs" />
+    <Compile Include="Models\Arduino\Responses\SettingsResponse.cs" />
+    <Compile Include="Models\Arduino\Requests\WeatherPostRequest.cs" />
+    <Compile Include="Models\Arduino\Responses\WeatherPostResponse.cs" />
+    <Compile Include="Models\Mobile\Dtos\WeatherData.cs" />
+    <Compile Include="Models\Mobile\Dtos\WeatherDto.cs" />
+    <Compile Include="Models\Mobile\Requests\LoginPostRequest.cs" />
+    <Compile Include="Models\Mobile\Requests\MobileBaseRequest.cs" />
+    <Compile Include="Models\Mobile\Requests\PostProfileMinTemperatureRequest.cs" />
+    <Compile Include="Models\Mobile\Requests\WeatherGetRequest.cs" />
+    <Compile Include="Models\Mobile\Responses\LoginPostResponse.cs" />
+    <Compile Include="Models\Mobile\Responses\MobileBaseResponse.cs" />
+    <Compile Include="Models\Mobile\Responses\WeatherGetResponse.cs" />
+    <Compile Include="Models\Profile.cs">
+      <DependentUpon>KombiCimModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ProfilePreference.cs">
+      <DependentUpon>KombiCimModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ProfileType.cs">
+      <DependentUpon>KombiCimModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Setting.cs">
+      <DependentUpon>KombiCimModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\State.cs">
+      <DependentUpon>KombiCimModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\User.cs">
+      <DependentUpon>KombiCimModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Weather.cs">
+      <DependentUpon>KombiCimModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repository\ApiAuthTypeRepository.cs" />
+    <Compile Include="Repository\ApiUserRepository.cs" />
+    <Compile Include="Repository\BaseRepository.cs" />
+    <Compile Include="Repository\CombiLogRepository.cs" />
+    <Compile Include="Repository\DeviceRepository.cs" />
+    <Compile Include="Repository\LocationRepository.cs" />
+    <Compile Include="Repository\MinOperatorRepository.cs" />
+    <Compile Include="Repository\MinTemperatureRepository.cs" />
+    <Compile Include="Repository\ProfileRepository.cs" />
+    <Compile Include="Repository\SettingRepository.cs" />
+    <Compile Include="Repository\StateRepository.cs" />
+    <Compile Include="Repository\UserRepository.cs" />
+    <Compile Include="Repository\WeatherRepository.cs" />
+    <Compile Include="Utilities\DbHelper.cs" />
+    <Compile Include="Utilities\ErrorCodes.cs" />
+    <Compile Include="Utilities\Roles.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.Config" />
+    <EntityDeploy Include="Models\KombiCimModel.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>KombiCimModel.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <None Include="Models\KombiCimModel.edmx.diagram">
+      <DependentUpon>KombiCimModel.edmx</DependentUpon>
+    </None>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\KombiCim.Utilities\KombiCim.Utilities.csproj">
+      <Project>{adb9fb8a-028a-4062-b7ec-b23dd04e2800}</Project>
+      <Name>KombiCim.Utilities</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Models\KombiCimModel.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>KombiCimModel.edmx</DependentUpon>
+      <LastGenOutput>KombiCimModel.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="Models\KombiCimModel.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>KombiCimModel.edmx</DependentUpon>
+      <LastGenOutput>KombiCimModel.cs</LastGenOutput>
+    </Content>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="48.0dip"
+    android:background="#fff9eae1"
+    android:orientation="horizontal"
+    android:weightSum="3.0">
+
+    <TextView
+        android:id="@+id/header_tvsicaklik"
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="1.0"
+        android:gravity="center"
+        android:text="Sıcaklık (C°)"
+        android:textColor="#ff394053"
+        android:textSize="18.0sp" />
+
+    <TextView
+        android:id="@+id/header_tvnem"
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="1.0"
+        android:gravity="center"
+        android:text="Bağıl Nem"
+        android:textColor="#ff394053"
+        android:textSize="18.0sp" />
+
+    <TextView
+        android:id="@+id/header_tvsaat"
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="1.0"
+        android:gravity="center"
+        android:text="Saat"
+        android:textColor="#ff394053"
+        android:textSize="18.0sp" />
+</LinearLayout>

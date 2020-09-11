@@ -1,0 +1,49 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.852
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KombiCim.Data", "KombiCim.Data\KombiCim.Data.csproj", "{05661469-C101-4077-A53B-5412B8415D57}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KombiCim.Utilities", "KombiCim.Utilities\KombiCim.Utilities.csproj", "{ADB9FB8A-028A-4062-B7EC-B23DD04E2800}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KombiCim.Arduino", "KombiCim.Arduino\KombiCim.Arduino.csproj", "{5C08ACFC-940B-4A71-BB17-B27C1A269934}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KombiCim.Mobile", "KombiCim.Mobile\KombiCim.Mobile.csproj", "{D6D25EF0-5947-4423-A40D-08BC6AA6FC23}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KombiCim.Tests", "KombiCim.Tests\KombiCim.Tests.csproj", "{32BAEF34-E2A2-4497-A3E4-0601C11A74FA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{05661469-C101-4077-A53B-5412B8415D57}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{05661469-C101-4077-A53B-5412B8415D57}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{05661469-C101-4077-A53B-5412B8415D57}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{05661469-C101-4077-A53B-5412B8415D57}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ADB9FB8A-028A-4062-B7EC-B23DD04E2800}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ADB9FB8A-028A-4062-B7EC-B23DD04E2800}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ADB9FB8A-028A-4062-B7EC-B23DD04E2800}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ADB9FB8A-028A-4062-B7EC-B23DD04E2800}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5C08ACFC-940B-4A71-BB17-B27C1A269934}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5C08ACFC-940B-4A71-BB17-B27C1A269934}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5C08ACFC-940B-4A71-BB17-B27C1A269934}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5C08ACFC-940B-4A71-BB17-B27C1A269934}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D6D25EF0-5947-4423-A40D-08BC6AA6FC23}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D6D25EF0-5947-4423-A40D-08BC6AA6FC23}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D6D25EF0-5947-4423-A40D-08BC6AA6FC23}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D6D25EF0-5947-4423-A40D-08BC6AA6FC23}.Release|Any CPU.Build.0 = Release|Any CPU
+		{32BAEF34-E2A2-4497-A3E4-0601C11A74FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{32BAEF34-E2A2-4497-A3E4-0601C11A74FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{32BAEF34-E2A2-4497-A3E4-0601C11A74FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{32BAEF34-E2A2-4497-A3E4-0601C11A74FA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {FC7F6F16-7427-4123-8BBF-472217EE5FFB}
+	EndGlobalSection
+EndGlobal

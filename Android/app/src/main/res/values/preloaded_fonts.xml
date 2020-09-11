@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="preloaded_fonts" translatable="false">
+        <item>@font/reenie_beanie</item>
+        <item>@font/short_stack</item>
+        <item>@font/trade_winds</item>
+        <item>@font/zeyada</item>
+    </array>
+</resources>

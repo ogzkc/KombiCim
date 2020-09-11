@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout_itemWeather"
+    android:layout_width="fill_parent"
+    android:layout_height="48.0dip"
+    android:orientation="horizontal"
+    android:padding="8.0dip"
+    android:weightSum="3.0">
+
+    <TextView
+        android:id="@+id/item_tvSicaklik"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="1.0"
+        android:gravity="center"
+        android:text="25.3 C°"
+        android:textColor="@color/colorPrimary"
+        android:textSize="18.0sp" />
+
+    <TextView
+        android:id="@+id/item_tvNem"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="1.0"
+        android:gravity="center"
+        android:text="%45"
+        android:textColor="#000000"
+        android:textSize="18.0sp" />
+
+    <TextView
+        android:id="@+id/item_tvSaat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="1.0"
+        android:gravity="center"
+        android:text="12:34"
+        android:textColor="#000000"
+        android:textSize="18.0sp" />
+</LinearLayout>
