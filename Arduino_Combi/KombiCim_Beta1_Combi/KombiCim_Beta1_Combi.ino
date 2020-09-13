@@ -3,8 +3,8 @@
 
 #define RELAY_PIN 6
 
-RH_ASK driver(2000, 12);
-// RH_ASK driver(2000, 2, 4, 5); // ESP8266: do not use pin 11
+RH_ASK driver(2000, 12); // Use any pin for Arduino boards
+// RH_ASK driver(2000, 2, 4, 5); // if ESP8266 -> do not use pin 11
 
 String id = "zxcv1234";
 
@@ -29,11 +29,13 @@ void loop()
     String data = String((char*)buf);
     String receivedDeviceId = data.substring(0, data.indexOf("&", 0));
     String receivedData = data.substring(data.indexOf("&", 0) + 1, data.length());
-    if (receivedData.startsWith("1"))
-      digitalWrite(RELAY_PIN, HIGH);
-    else if (receivedData.startsWith("0"))
-      digitalWrite(RELAY_PIN, LOW);
-
+    if (receivedDeviceId == id)
+    {
+      if (receivedData.startsWith("1"))
+        digitalWrite(RELAY_PIN, HIGH);
+      else if (receivedData.startsWith("0"))
+        digitalWrite(RELAY_PIN, LOW);
+    }
     Serial.print("Message: ");
     Serial.println(data);
   }
