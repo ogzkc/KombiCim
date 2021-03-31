@@ -22,6 +22,14 @@ TODOS:
 
 --------------------------------
 
-Database Diagram
+**Center Device** -> Connected to WiFi, measures temperature and send commands to Heater device via RF
+![Center Device](Diagrams-Notes/CenterDevice.jpg)
+
+**Heater Device** -> Receives Turn on/off commands via RF and controls Relay
+![Heater Device](Diagrams-Notes/HeaterDevice.jpg)
+
+-----------------------
+
+**Database Diagram**
 ![Database Diagram](Diagrams-Notes/DatabaseDiagram.jpg)
 
