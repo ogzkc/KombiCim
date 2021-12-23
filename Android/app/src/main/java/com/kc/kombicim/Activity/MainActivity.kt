@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.TextView
 import com.kc.kombicim.R
 import com.kc.kombicim.Utility.Settings
 import io.paperdb.Paper
@@ -32,13 +33,14 @@ class MainActivity : AppCompatActivity() {
         val navController = findNavController(R.id.nav_host_fragment)
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
-        appBarConfiguration = AppBarConfiguration(
-            setOf(
-                R.id.nav_weather_log, R.id.nav_combi_log, R.id.nav_combi_control
-            ), drawerLayout
-        )
+        appBarConfiguration = AppBarConfiguration(setOf(R.id.nav_weather_log, R.id.nav_combi_log, R.id.nav_combi_control), drawerLayout)
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+
+        val headerView = navView.getHeaderView(0)
+        val tvEmail = headerView.findViewById<TextView>(R.id.textViewEmail)
+        val email = Paper.book().read(Settings.KEY_EMAIL, "")
+        tvEmail.text = email
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -54,6 +56,7 @@ class MainActivity : AppCompatActivity() {
             finish()
             startActivity(Intent(this, LoginActivity::class.java))
         }
+//        else if (item.itemId == R.id.action_refresh)
 
         return super.onOptionsItemSelected(item)
     }

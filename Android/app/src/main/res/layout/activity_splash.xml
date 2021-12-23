@@ -8,6 +8,7 @@ android:background="@drawable/background_login"
     tools:context=".Activity.SplashActivity">
 
     <TextView
+        android:id="@+id/tv_splash_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/reenie_beanie"
@@ -18,5 +19,17 @@ android:background="@drawable/background_login"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_splash_version"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textSize="24sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintVertical_bias="0.9"
+        app:layout_constraintTop_toTopOf="@+id/tv_splash_title" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

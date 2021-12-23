@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:id="@+id/constraintLayout_combiControl"
     android:layout_height="match_parent">
 
     <Spinner
@@ -17,6 +18,19 @@
         app:layout_constraintVertical_bias="0.2"
         app:layout_constraintWidth_min="160dp" />
 
+    <Spinner
+        android:id="@+id/spinner_locations"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="numberDecimal"
+        app:layout_constrainedWidth="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/spinner_profiles"
+        app:layout_constraintVertical_bias="0.1"
+        app:layout_constraintWidth_min="160dp" />
+
     <EditText
         android:id="@+id/edittext_temperature"
         android:layout_width="wrap_content"
@@ -26,7 +40,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/spinner_profiles"
+        app:layout_constraintTop_toTopOf="@id/spinner_locations"
         app:layout_constraintVertical_bias="0.1"
         app:layout_constraintWidth_min="160dp" />
 

@@ -2,6 +2,7 @@ package com.kc.kombicim.Fragment
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
@@ -27,10 +28,13 @@ class WeatherFragment : Fragment() {
 
     var dataHolder: WeatherViewPagerDataHolder? = null
     var pagerAdapter: WeatherFragmentAdapter? = null
+    lateinit var retrofit: Retrofit
+    lateinit var kombicimService: IKombiCimService
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val root = inflater.inflate(R.layout.fragment_weather, container, false)
 
+        setClient()
         getWeatherData()
 
         return root
@@ -41,12 +45,12 @@ class WeatherFragment : Fragment() {
         setHasOptionsMenu(true)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater!!.inflate(R.menu.refresh_button_fragment, menu)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item!!.itemId == R.id.action_refresh) {
             getWeatherData()
         }
@@ -58,19 +62,26 @@ class WeatherFragment : Fragment() {
 
     }
 
-    private fun getWeatherData() {
+    private fun setClient() {
         val clientBuilder = OkHttpClient.Builder().addInterceptor(BasicAuthInterceptor(Settings.API_USERNAME, Settings.API_PASSWORD))
         clientBuilder.addInterceptor { chain ->
             val request = chain.request().newBuilder().addHeader(Settings.API_HEADER_API_TOKEN, Settings.GetToken()).build()
             chain.proceed(request)
         }
+        retrofit = Retrofit.Builder().addConverterFactory(GsonConverterFactory.create()).baseUrl(Settings.API_BASE_URL).client(clientBuilder.build()).build()
+        kombicimService = retrofit.create(IKombiCimService::class.java)
+    }
 
-        val retrofit = Retrofit.Builder().addConverterFactory(GsonConverterFactory.create()).baseUrl(Settings.API_BASE_URL).client(clientBuilder.build()).build()
-        val kombicimService = retrofit.create(IKombiCimService::class.java)
+    private fun getWeatherData() {
+
+
+        //val retrofit = Retrofit.Builder().addConverterFactory(GsonConverterFactory.create()).baseUrl(Settings.API_BASE_URL).client(clientBuilder.build()).build()
 
         val weatherCall = kombicimService.getWeather(12)
+
         weatherCall.enqueue(object : Callback<WeatherResponse> {
             override fun onFailure(call: Call<WeatherResponse>, t: Throwable) {
+                Log.e("WeatherGet", t.message!!)
             }
 
             override fun onResponse(call: Call<WeatherResponse>, response: Response<WeatherResponse>) {
@@ -87,6 +98,8 @@ class WeatherFragment : Fragment() {
         pagerAdapter = WeatherFragmentAdapter(childFragmentManager, dataHolder!!)
         fragmentWeather_viewPager.adapter = pagerAdapter
         activityMain_indicator.setViewPager(fragmentWeather_viewPager)
+        pagerAdapter!!.notifyDataSetChanged()
+
         activityMain_indicator.textColor = R.color.md_blue_700
         activityMain_indicator.footerColor = R.color.md_blue_grey_200
         activityMain_indicator.footerLineHeight = 2f

@@ -27,7 +27,7 @@ class LoginActivity : AppCompatActivity() {
             val emailAddress = editTextEmail.text
             val password = editTextPassword.text
             val content = "$emailAddress:$password"
-            val base64 = android.util.Base64.encode(content.toByteArray(), android.util.Base64.DEFAULT).toString(Charsets.UTF_8)
+            val base64 = android.util.Base64.encode(content.toByteArray(), android.util.Base64.NO_WRAP).toString(Charsets.UTF_8)
             val loginRequest = LoginRequest(base64)
 
             val clientBuilder = OkHttpClient.Builder().addInterceptor(BasicAuthInterceptor(Settings.API_USERNAME, Settings.API_PASSWORD))
@@ -48,8 +48,10 @@ class LoginActivity : AppCompatActivity() {
 
                 override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
                     if (response.isSuccessful && response.body() != null) {
+
                         if (response.body()!!.Token != null) {
                             Paper.book().write(Settings.KEY_TOKEN, response.body()!!.Token)
+                            Paper.book().write(Settings.KEY_EMAIL, emailAddress.toString())
                             finish()
                             startActivity(Intent(applicationContext, MainActivity::class.java))
                         } else {

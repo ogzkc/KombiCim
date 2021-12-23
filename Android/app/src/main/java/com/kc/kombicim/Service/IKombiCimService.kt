@@ -1,9 +1,6 @@
 package com.kc.kombicim.Service
 
-import com.kc.kombicim.Model.Request.ActiveProfileRequest
-import com.kc.kombicim.Model.Request.LoginRequest
-import com.kc.kombicim.Model.Request.ProfileMinTemperatureRequest
-import com.kc.kombicim.Model.Request.StateRequest
+import com.kc.kombicim.Model.Request.*
 import com.kc.kombicim.Model.Response.*
 import retrofit2.Call
 import retrofit2.http.*
@@ -21,11 +18,17 @@ interface IKombiCimService {
     @GET(value = "Profile")
     fun getProfiles(): Call<ProfileResponse>
 
+    @GET(value = "Location/GetThermometers")
+    fun getThermometers(): Call<LocationsResponse>
+
     @POST(value = "Profile/SetActive")
     fun setActiveProfile(@Body activeProfileRequest: ActiveProfileRequest): Call<BaseResponse>
 
     @POST(value = "Settings/SetProfileMinTemperature")
     fun setProfileMinTemperature(@Body profileMinTemperatureRequest: ProfileMinTemperatureRequest): Call<BaseResponse>
+
+    @POST(value = "Settings/SetProfileThermometer")
+    fun setProfileThermometer(@Body profileMinTemperatureRequest: SetProfileThermometerRequest): Call<BaseResponse>
 
     @POST(value = "Settings/SetState")
     fun setState(@Body setStateRequest: StateRequest): Call<BaseResponse>

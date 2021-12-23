@@ -9,5 +9,6 @@ data class ProfileDto (
     @SerializedName("TypeName") val typeName : String,
     @SerializedName("MinTempValue") val minTempValue : Double?,
     @SerializedName("State") val state : Boolean?,
-    @SerializedName("Active") val active : Boolean
+    @SerializedName("Active") val active : Boolean,
+    @SerializedName("SelectedThermometer") val selectedThermometer: LocationDto?
 )
