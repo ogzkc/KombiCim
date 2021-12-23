@@ -3,7 +3,7 @@ IoT Room temperature control project
 
 This project aims to keep room at a stable temperature that can be change by user. 
 Project has 4 parts and these are 
-- Web API | **.NET Framework C#**
+- Web API | **.NET 6 C# - Docker support**
 - Center ESP8266 device that connects WiFi(API), measure temperature by DHT22, sends RF 433mhz signals to other device to turns on/off heating system | **Arduino C/C++**
 - Arduino (any) device that receives command via RF 433mhz from center and turns on/off the heating system | **Arduino C/C++**
 - Simple Android application that users can login, control temperature or manually turns on or off | **Native Android - Kotlin**
