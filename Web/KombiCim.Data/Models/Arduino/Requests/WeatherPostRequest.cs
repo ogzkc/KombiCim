@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Web;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace KombiCim.Data.Models.Arduino
+namespace Kombicim.Data.Models.Arduino.Requests
 {
     public class WeatherPostRequest : BaseDeviceRequest
     {

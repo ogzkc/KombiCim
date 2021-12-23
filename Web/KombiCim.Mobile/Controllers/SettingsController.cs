@@ -1,70 +1,82 @@
-﻿
-using KombiCim.Data.Models;
-using KombiCim.Data.Models.Arduino.Responses;
-using KombiCim.Data.Models.Mobile.Requests;
-using KombiCim.Data.Models.Mobile.Responses;
-using KombiCim.Data.Repository;
-using KombiCim.Data.Utilities;
-using KombiCim.Filters;
-using KombiCim.Utilities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Threading.Tasks;
-using System.Web.Http;
+﻿using Kombicim.APIShared.Attributes;
+using Kombicim.Data.Models.Arduino.Responses;
+using Kombicim.Data.Models.Mobile.Requests;
+using Kombicim.Data.Models.Mobile.Responses;
+using Kombicim.Data.Repository;
+using Kombicim.Data.Utilities;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
-namespace KombiCim.Controllers
+namespace Kombicim.Mobile.Controllers
 {
     [Authentication]
-    [ModelValidation]
-    [TokenValidation]
-    [Authorize(Roles = Roles.ROLE_MOBILE_APP)]
-    public class SettingsController : BaseApiController
+    [ApiController]
+    [Route("[controller]/[action]")]
+    //[Authorize(Roles = Roles.ROLE_MOBILE_APP)]
+    public class SettingsController : MobileApiController<SettingsController>
     {
+        private readonly SettingRepository settingRepository;
+        private readonly MinTemperatureRepository minTemperatureRepository;
+
+        public SettingsController(IServiceProvider serviceProvider, SettingRepository settingRepository, MinTemperatureRepository minTemperatureRepository) : base(serviceProvider)
+        {
+            this.settingRepository = settingRepository;
+            this.minTemperatureRepository = minTemperatureRepository;
+        }
+
+        [HttpGet]
         public async Task<SettingsResponse> Get(string deviceId)
         {
             return new SettingsResponse()
             {
-                Settings = await SettingRepository.GetActiveDto(deviceId)
+                Settings = await settingRepository.GetActiveDto(deviceId)
             };
         }
 
-
-        public async Task<PostMinTemperatureResponse> SetMinTemperature([FromBody]PostMinTemperatureRequest request)
+        [HttpPost]
+        public async Task<PostMinTemperatureResponse> SetMinTemperature([FromBody] PostMinTemperatureRequest request)
         {
-            var success = await MinTemperatureRepository.Set(request.ProfileId, request.LocationId, request.Temperature, request.DayOfWeek, request.Hour, request.Minutes);
+            var success = await minTemperatureRepository.Set(request.ProfileId, request.LocationId, request.Temperature);
             return new PostMinTemperatureResponse()
             {
                 Success = success
             };
         }
 
-
-        //koray
-        public async Task<PostMinTemperatureResponse> SetProfileMinTemperature([FromBody]PostProfileMinTemperatureRequest request)
+        [HttpPost]
+        public async Task<PostMinTemperatureResponse> SetProfileMinTemperature([FromBody] PostProfileMinTemperatureRequest request)
         {
-            var success = await MinTemperatureRepository.SetProfile(request.ProfileId, request.Temperature, request.DayOfWeek, request.Hour, request.Minutes);
+            var success = await minTemperatureRepository.SetProfile(request.ProfileId, request.Temperature);
             return new PostMinTemperatureResponse()
             {
                 Success = success
             };
         }
 
-        //koray
-        public async Task<MobileBaseResponse> SetState([FromBody]SetStateRequest request)
+        [HttpPost]
+        public async Task<MobileBaseResponse> SetProfileThermometer([FromBody] SetProfileThermometerRequest request)
         {
-            await SettingRepository.SetState(ApiUser.OwnedDeviceId, request.State);
+            var success = await minTemperatureRepository.SetLocationByProfileId(request.ProfileId, request.LocationId);
+            return new MobileBaseResponse()
+            {
+                Success = success
+            };
+        }
+
+        //koray
+        [HttpPost]
+        public async Task<MobileBaseResponse> SetState([FromBody] SetStateRequest request)
+        {
+            await settingRepository.SetState(ApiUser.DeviceId, request.State);
             return new MobileBaseResponse();
         }
 
-
+        [HttpGet]
         public async Task<GuidResponse> GetGuid(string deviceId)
         {
             return new GuidResponse()
             {
-                Guid = await SettingRepository.GetGuid(deviceId)
+                Guid = await settingRepository.GetGuid(deviceId)
             };
         }
     }

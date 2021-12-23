@@ -1,11 +1,6 @@
 ﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace KombiCim.Data.Models.Arduino
+namespace Kombicim.Data.Models.Arduino.Dtos
 {
     public class ProfileDto
     {
@@ -17,6 +12,9 @@ namespace KombiCim.Data.Models.Arduino
         public bool? State { get; set; }
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public double? MinTempValue { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public LocationDto SelectedThermometer { get; set; }
 
         public bool Active { get; set; }
     }

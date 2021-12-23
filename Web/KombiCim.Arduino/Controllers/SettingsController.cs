@@ -1,35 +1,34 @@
-﻿using KombiCim.Data.Models.Arduino;
-using KombiCim.Data.Models;
-using KombiCim.Data.Repository;
-using KombiCim.Data.Utilities;
-using KombiCim.Filters;
-using KombiCim.Utilities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Threading.Tasks;
-using System.Web.Http;
-using KombiCim.Data.Models.Arduino.Responses;
+﻿using Kombicim.Data.Models.Arduino;
+using Kombicim.Data.Repository;
+using Kombicim.APIShared.Attributes;
+using Kombicim.Data.Models.Arduino.Responses;
+using Microsoft.AspNetCore.Mvc;
 
-namespace KombiCim.Arduino.Controllers
+namespace Kombicim.Arduino.Controllers
 {
     [Authentication]
-    [ModelValidation]
-    public class SettingsController : ApiController
+    [ApiController]
+    [Route("[controller]")]
+    public class SettingsController : ControllerBase
     {
-        public async Task<SettingsResponse> Get(string deviceId)
+        private readonly SettingRepository settingRepository;
+
+        public SettingsController(SettingRepository settingRepository)
         {
-            using (var db = new KombiCimEntities())
-            {
-                return new SettingsResponse()
-                {
-                    Settings = await SettingRepository.GetActiveDto(deviceId, db)
-                };
-            }
+            this.settingRepository = settingRepository;
         }
 
+        [HttpGet]
+        public async Task<SettingsResponse> Get(string deviceId)
+        {
+            return new SettingsResponse()
+            {
+                Settings = await settingRepository.GetActiveDto(deviceId)
+            };
+        }
+
+        [Route("[action]")]
+        [HttpGet]
         public DateTimeCustom GetTime()
         {
             var now = DateTime.Now;
@@ -44,11 +43,13 @@ namespace KombiCim.Arduino.Controllers
             };
         }
 
+        [Route("[action]")]
+        [HttpGet]
         public async Task<GuidResponse> GetGuid(string deviceId)
         {
             return new GuidResponse()
             {
-                Guid = await SettingRepository.GetGuid(deviceId)
+                Guid = await settingRepository.GetGuid(deviceId)
             };
         }
     }

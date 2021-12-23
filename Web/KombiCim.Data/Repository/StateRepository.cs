@@ -1,62 +1,51 @@
-﻿using KombiCim.Data.Models.Arduino;
-using KombiCim.Data.Models;
-using KombiCim.Data.Utilities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Data.Entity;
+﻿using Kombicim.Data.Entities;
+using Kombicim.Data.Utilities;
+using Microsoft.EntityFrameworkCore;
 
-namespace KombiCim.Data.Repository
+namespace Kombicim.Data.Repository
 {
     public class StateRepository : BaseRepository
     {
-        public static async Task<bool> Get(string deviceId, KombiCimEntities db_ = null)
+        public StateRepository(KombicimDataContext kombiCimDataContext) : base(kombiCimDataContext)
         {
-            using (var dbHelper = new DbHelper(db_))
+
+        }
+
+        public async Task<bool> Get(string deviceId)
+        {
+            var state = await Db.States.Where(x => x.DeviceId == deviceId).SingleOrDefaultAsync();
+            if (state != null)
+                return state.Value;
+            else
             {
-                var db = dbHelper.Db;
-
-                var state = await db.States.Where(x => x.DeviceId == deviceId && x.DisabledAt == null).SingleOrDefaultAsync();
-                if (state != null)
-                    return state.Value;
-                else
+                state = new CombiStateEntity()
                 {
-                    state = new State()
-                    {
-                        DeviceId = deviceId,
-                        Value = true,
-                        CreatedAt = Now
-                    };
-                    db.States.Add(state);
-                    await db.SaveChangesAsync();
+                    DeviceId = deviceId,
+                    Value = true,
+                    CreatedAt = Now
+                };
+                Db.States.Add(state);
+                await Db.SaveChangesAsync();
 
-                    return true;
-                }
+                return true;
             }
         }
 
-        public static async Task Set(string deviceId, bool value, KombiCimEntities db_ = null)
+        public async Task Set(string deviceId, bool value)
         {
-            using (var dbHelper = new DbHelper(db_))
-            {
-                var db = dbHelper.Db;
 
-                var state = await db.States.Where(x => x.DeviceId == deviceId && x.DisabledAt == null).SingleOrDefaultAsync();
-                if (state != null)
-                    state.DisabledAt = Now;
-
-                var newState = new State()
+            var state = await Db.States.Where(x => x.DeviceId == deviceId).SingleOrDefaultAsync();
+            if (state != null)
+                state.Value = value;
+            else
+                Db.States.Add(new CombiStateEntity()
                 {
                     DeviceId = deviceId,
                     Value = value,
                     CreatedAt = Now
-                };
-                db.States.Add(newState);
+                });
 
-                await db.SaveChangesAsync();
-            }
+            await Db.SaveChangesAsync();
         }
     }
 }

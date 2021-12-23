@@ -1,25 +1,19 @@
-﻿using KombiCim.Data.Models.Arduino;
-using KombiCim.Data.Models;
-using KombiCim.Data.Utilities;
-using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Kombicim.Data.Utilities;
+using Kombicim.Data.Entities;
+using Microsoft.EntityFrameworkCore;
 
-namespace KombiCim.Data.Repository
+namespace Kombicim.Data.Repository
 {
     public class ApiUserRepository : BaseRepository
     {
-        public static ApiUser Get(string username, string password, KombiCimEntities db_ = null)
-        {
-            using (var dbHelper = new DbHelper(db_))
-            {
-                var db = dbHelper.Db;
 
-                return db.ApiUsers.Where(x => x.Username == username && x.Password == password && x.Active).SingleOrDefault();
-            }
+        public ApiUserRepository(KombicimDataContext kombiCimDataContext) : base(kombiCimDataContext)
+        {
+        }
+
+        public async Task<ApiUserEntity> GetAsync(string username, string password)
+        {
+            return await Db.ApiUsers.Where(x => x.Username == username && x.Password == password && x.Active).SingleOrDefaultAsync();
         }
     }
 }

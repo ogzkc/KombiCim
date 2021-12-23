@@ -1,37 +1,44 @@
-﻿using KombiCim.Data.Models;
-using KombiCim.Data.Models.Arduino;
-using KombiCim.Data.Models.Mobile.Requests;
-using KombiCim.Data.Models.Mobile.Responses;
-using KombiCim.Data.Repository;
-using KombiCim.Data.Utilities;
-using KombiCim.Filters;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web;
-using System.Web.Http;
+﻿using Kombicim.APIShared.Attributes;
+using Kombicim.Data.Models;
+using Kombicim.Data.Models.Mobile.Requests;
+using Kombicim.Data.Models.Mobile.Responses;
+using Kombicim.Data.Repository;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
-namespace KombiCim.Controllers
+namespace Kombicim.Mobile.Controllers
 {
-    [ModelValidationAttribute]
     [Authentication]
-    [Authorize(Roles = Roles.ROLE_MOBILE_APP)]
-    public class LoginController : ApiController
+    [ApiController]
+    [Route("[controller]")]
+    //[Authorize(Roles = Roles.ROLE_MOBILE_APP)]
+    public class LoginController : ControllerBase
     {
-        public async Task<LoginPostResponse> Post([FromBody]LoginPostRequest request)
+        private readonly UserRepository userRepository;
+
+        public LoginController(UserRepository userRepository)
         {
-            using (var db = new KombiCimEntities())
+            this.userRepository = userRepository;
+        }
+
+        [HttpPost]
+        public async Task<LoginPostResponse> Post([FromBody] LoginPostRequest request)
+        {
+            string token = null;
+            try
             {
-                var token = await UserRepository.GetToken(request.Content, db);
-                return new LoginPostResponse()
-                {
-                    Success = token != null,
-                    ErrorCode = token != null ? null : ErrorCodes.INVALID_USER_INFO,
-                    Token = token
-                };
+                token = await userRepository.GetToken(request.Content);
             }
+            catch (Exception ex)
+            {
+                // can be logged (may be exception from decoding base64)
+            }
+            return new LoginPostResponse()
+            {
+                Success = token != null,
+                ErrorCode = token != null ? null : ErrorCodes.INVALID_USER_INFO,
+                Token = token
+            };
         }
     }
 }

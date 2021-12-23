@@ -1,11 +1,6 @@
-﻿using KombiCim.Data.Models.Mobile.Dtos;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Kombicim.Data.Models.Mobile.Dtos;
 
-namespace KombiCim.Data.Models.Mobile.Responses
+namespace Kombicim.Data.Models.Mobile.Responses
 {
     public class WeatherGetResponse : MobileBaseResponse
     {

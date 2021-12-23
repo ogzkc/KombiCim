@@ -1,26 +1,28 @@
-﻿using KombiCim.Data.Models.Arduino;
-using KombiCim.Data.Models;
-using KombiCim.Data.Repository;
-using KombiCim.Data.Utilities;
-using KombiCim.Filters;
-using System;
-using System.Threading.Tasks;
-using System.Web.Http;
-using KombiCim.Data.Models.Arduino.Responses;
+﻿using Kombicim.Data.Repository;
+using Kombicim.APIShared.Attributes;
+using Kombicim.Data.Models.Arduino.Responses;
+using Microsoft.AspNetCore.Mvc;
+using Kombicim.Data.Models.Arduino.Requests;
 
-namespace KombiCim.Arduino.Controllers
+namespace Kombicim.Arduino.Controllers
 {
     [Authentication]
-    [ModelValidation]
-    public class DeviceController : ApiController
+    [ApiController]
+    [Route("[controller]/[action]")]
+    public class DeviceController : ControllerBase
     {
-        public async Task<PostDeviceResponse> Post([FromBody]PostDeviceRequest request)
+        private readonly DeviceRepository deviceRepository;
+
+        public DeviceController(DeviceRepository deviceRepository)
         {
-            using (var db = new KombiCimEntities())
-            {
-                await DeviceRepository.Post(request.DeviceId, request.TypeName, db_: db);
-                return new PostDeviceResponse();
-            }
+            this.deviceRepository = deviceRepository;
+        }
+
+        [HttpPost]
+        public async Task<PostDeviceResponse> Post([FromBody] PostDeviceRequest request)
+        {
+            await deviceRepository.Post(request.DeviceId, request.TypeName);
+            return new PostDeviceResponse();
         }
     }
 }

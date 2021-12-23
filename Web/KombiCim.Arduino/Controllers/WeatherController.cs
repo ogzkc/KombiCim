@@ -1,27 +1,28 @@
-﻿using System.Net.Http;
-using System.Threading.Tasks;
-using System.Web.Http;
-using KombiCim.Data.Models.Arduino;
-using KombiCim.Data.Models;
-using KombiCim.Data.Repository;
-using KombiCim.Data.Utilities;
-using KombiCim.Filters;
-using KombiCim.Utilities;
-using KombiCim.Data.Models.Arduino.Responses;
+﻿using Kombicim.Data.Repository;
+using Kombicim.APIShared.Attributes;
+using Kombicim.Data.Models.Arduino.Responses;
+using Microsoft.AspNetCore.Mvc;
+using Kombicim.Data.Models.Arduino.Requests;
 
-namespace KombiCim.Arduino.Controllers
+namespace Kombicim.Arduino.Controllers
 {
     [Authentication]
-    [ModelValidation]
-    public class WeatherController : ApiController
+    [ApiController]
+    [Route("[controller]")]
+    public class WeatherController : ControllerBase
     {
-        public async Task<WeatherPostResponse> Post([FromBody]WeatherPostRequest request)
+        private readonly WeatherRepository weatherRepository;
+
+        public WeatherController(WeatherRepository weatherRepository)
         {
-            using (var db = new KombiCimEntities())
-            {
-                await WeatherRepository.Post(request.DeviceId, request.Temperature, request.Humidity, db);
-                return new WeatherPostResponse();
-            }
+            this.weatherRepository = weatherRepository;
+        }
+
+        [HttpPost]
+        public async Task<WeatherPostResponse> Post([FromBody] WeatherPostRequest request)
+        {
+            await weatherRepository.Post(request.DeviceId, request.Temperature, request.Humidity);
+            return new WeatherPostResponse();
         }
     }
 }

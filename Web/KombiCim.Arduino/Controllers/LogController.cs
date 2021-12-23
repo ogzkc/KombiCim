@@ -1,19 +1,27 @@
-﻿using KombiCim.Data.Models;
-using KombiCim.Data.Models.Arduino;
-using KombiCim.Data.Repository;
-using KombiCim.Filters;
-using System.Threading.Tasks;
-using System.Web.Http;
+﻿using Kombicim.Data.Repository;
+using Kombicim.APIShared.Attributes;
+using Microsoft.AspNetCore.Mvc;
+using Kombicim.Data.Models.Arduino.Requests;
+using Kombicim.Data.Models.Arduino.Responses;
 
-namespace KombiCim.Arduino.Controllers
+namespace Kombicim.Arduino.Controllers
 {
     [Authentication]
-    [ModelValidation]
-    public class LogController : ApiController
+    [ApiController]
+    [Route("[controller]/[action]")]
+    public class LogController : ControllerBase
     {
-        public async Task<BaseDeviceResponse> PostCombiLog([FromBody]PostCombiLogRequest request)
+        private readonly CombiLogRepository combiLogRepository;
+
+        public LogController(CombiLogRepository combiLogRepository)
         {
-            await CombiLogRepository.Post(request.DeviceId, request.State);
+            this.combiLogRepository = combiLogRepository;
+        }
+
+        [HttpPost]
+        public async Task<BaseDeviceResponse> PostCombiLog([FromBody] PostCombiLogRequest request)
+        {
+            await combiLogRepository.Post(request.DeviceId, request.State);
             return new BaseDeviceResponse();
         }
     }

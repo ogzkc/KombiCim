@@ -1,77 +1,64 @@
-﻿using KombiCim.Data.Models.Arduino;
-using KombiCim.Data.Utilities;
-using KombiCim.Data.Exceptions;
-using KombiCim.Utilities.Extensions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using KombiCim.Data.Models;
-using System.Data.Entity;
+﻿using Kombicim.Data.Utilities;
+using Kombicim.Data.Exceptions;
+using Microsoft.EntityFrameworkCore;
+using Kombicim.Data.Entities;
+using Kombicim.Data.Models;
 
-namespace KombiCim.Data.Repository
+namespace Kombicim.Data.Repository
 {
     public class DeviceRepository : BaseRepository
     {
-        private const string TYPE_THERMOMETER = "thermometer";
-        private const string TYPE_CENTER = "center";
+        private readonly LocationRepository locationRepository;
 
-        public static Task<Device> Get(string deviceId, KombiCimEntities db_ = null)
+        public DeviceRepository(LocationRepository locationRepository, KombicimDataContext kombiCimDataContext) : base(kombiCimDataContext)
         {
-            using (var dbHelper = new DbHelper(db_))
-            {
-                var db = dbHelper.Db;
-                return db.Devices.Where(x => x.Id == deviceId).SingleOrDefaultAsync();
-            }
+            this.locationRepository = locationRepository;
         }
 
-        public static async Task<Device> Post(string deviceId, string typeName, string centerDeviceId = null, string initialLocation = null, KombiCimEntities db_ = null)
+        public async Task<DeviceEntity> Get(string deviceId)
         {
-            using (var dbHelper = new DbHelper(db_))
-            {
-                var db = dbHelper.Db;
+            return await Db.Devices.Where(x => x.Id == deviceId).SingleOrDefaultAsync();
+        }
 
-                if (!await Exist(deviceId, db))
+        public async Task<DeviceEntity> Post(string deviceId, string typeName, string centerDeviceId = null, string initialLocation = null)
+        {
+            if (!await Exist(deviceId))
+            {
+                if (typeName != DeviceType.CENTER_NAME || typeName != DeviceType.THERMOMETER_NAME)
+                    throw new RepositoryException($"Invalid device type name: {typeName} | Supported device type names: {string.Join(",", DeviceType.All.Select(x => x.Name))}");
+
+                typeName = typeName.ToLowerInvariant();
+
+                var type = DeviceType.All.Where(x => x.Name == typeName).SingleOrDefault();
+                if (type == null)
+                    throw new RepositoryException($"'{typeName}' typeName parametresi ile bir DeviceType bulunamadı.");
+
+                var device = new DeviceEntity
                 {
-                    if (typeName != TYPE_CENTER || typeName != TYPE_THERMOMETER)
-                        throw new RepositoryException($"Invalid device type name: {typeName}");
+                    Id = deviceId,
+                    TypeId = type.Id,
+                    CenterDeviceId = centerDeviceId,
+                    CreatedAt = Now
+                };
+                Db.Devices.Add(device);
+                await Db.SaveChangesAsync();
 
-                    typeName = typeName.ToLowerInvariant();
+                if (initialLocation.NullEmpty())
+                    initialLocation = LocationRepository.DEFAULT_LOCATION;
 
-                    var type = await db.DeviceTypes.Where(x => x.Name == typeName).SingleOrDefaultAsync();
-                    if (type == null)
-                        throw new RepositoryException($"'{typeName}' typeName parametresi ile bir DeviceType bulunamadı.");
+                await locationRepository.Post(deviceId, initialLocation, centerDeviceId == null);
 
-                    var device = new Device
-                    {
-                        Id = deviceId,
-                        TypeId = type.Id,
-                        CenterDeviceId = centerDeviceId,
-                        CreatedAt = Now
-                    };
-                    db.Devices.Add(device);
-                    await db.SaveChangesAsync();
-
-                    if (initialLocation.NullEmpty())
-                        initialLocation = LocationRepository.DEFAULT_LOCATION;
-
-                    await LocationRepository.Post(deviceId, initialLocation, centerDeviceId == null, db);
-
-                    return device;
-                }
-                else
-                    return await Get(deviceId, db);
+                return device;
             }
+            else
+                return await Get(deviceId);
         }
 
-        public static async Task<bool> Exist(string deviceId, KombiCimEntities db_ = null)
+
+        public async Task<bool> Exist(string deviceId)
         {
-            using (var dbHelper = new DbHelper(db_))
-            {
-                var db = dbHelper.Db;
-                return await db.Devices.Where(x => x.Id == deviceId).AnyAsync();
-            }
+            return await Db.Devices.Where(x => x.Id == deviceId).AnyAsync();
         }
     }
+
 }

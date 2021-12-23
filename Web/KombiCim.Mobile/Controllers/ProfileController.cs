@@ -1,35 +1,62 @@
-﻿using KombiCim.Data.Models.Mobile.Requests;
-using KombiCim.Data.Models.Mobile.Responses;
-using KombiCim.Data.Repository;
-using KombiCim.Data.Utilities;
-using KombiCim.Filters;
-using KombiCim.Utilities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Web;
-using System.Web.Http;
+﻿using Kombicim.APIShared.Attributes;
+using Kombicim.Data.Models.Mobile.Requests;
+using Kombicim.Data.Models.Mobile.Responses;
+using Kombicim.Data.Repository;
+using Kombicim.Data.Utilities;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
-namespace KombiCim.Controllers
+namespace Kombicim.Mobile.Controllers
 {
     [Authentication]
-    [ModelValidation]
-    [TokenValidation]
-    [Authorize(Roles = Roles.ROLE_MOBILE_APP)]
-    public class ProfileController : BaseApiController
+    [ApiController]
+    [Route("[controller]")]
+    //[Authorize(Roles = Roles.ROLE_MOBILE_APP)]
+    public class ProfileController : MobileApiController<ProfileController>
     {
+        private readonly ProfileRepository profileRepository;
+
+        public ProfileController(IServiceProvider serviceProvider, ProfileRepository profileRepository) : base(serviceProvider)
+        {
+            this.profileRepository = profileRepository;
+        }
+
+        [Route("[action]")]
+        [HttpGet]
+        public GetProfileTypesResponse GetProfileTypes()
+        {
+            return new GetProfileTypesResponse()
+            {
+                ProfileTypeDtos = profileRepository.GetSupportedProfileTypeDtos()
+            };
+        }
+
+        [HttpGet]
         public async Task<GetProfilesResponse> Get()
         {
             return new GetProfilesResponse()
             {
-                ProfileDtos = await ProfileRepository.GetDtos(ApiUser.OwnedDeviceId)
+                ProfileDtos = await profileRepository.GetDtos(ApiUser.DeviceId)
             };
         }
 
-        public async Task<MobileBaseResponse> SetActive([FromBody]SetActiveProfileRequest request)
+        [Route("[action]")]
+        [HttpPost]
+        public async Task<CreateProfileResponse> Create([FromBody] CreateProfileRequest request)
         {
-            await ProfileRepository.SetActive(request.ProfileId, ApiUser.Id);
+            var profile = await profileRepository.Create(request.Name, request.ProfileTypeId, ApiUser.Id);
+
+            return new CreateProfileResponse()
+            {
+                Success = profile != null && profile.Id != 0
+            };
+        }
+
+        [Route("[action]")]
+        [HttpPost]
+        public async Task<MobileBaseResponse> SetActive([FromBody] SetActiveProfileRequest request)
+        {
+            await profileRepository.SetActive(request.ProfileId, ApiUser.Id);
             return new MobileBaseResponse();
         }
     }
