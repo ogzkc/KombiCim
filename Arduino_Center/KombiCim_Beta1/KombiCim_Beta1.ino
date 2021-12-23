@@ -9,7 +9,7 @@
 #include <SPI.h>
 
 #define WIFI_SSID "KC"
-#define WIFI_PASS "xxxxxxxxx"
+#define WIFI_PASS "xxxxxxx"
 
 #define DEBUG_USB
 
@@ -23,9 +23,9 @@
 #define RF_SEND_BACKUP_COUNT 3 // count for send RF -backup-
 
 #define MIN_COMBI_CHANGE 8               // mins
-#define INTERVAL_COMBI_CONTROL 2         // mins
+#define INTERVAL_COMBI_CONTROL 1         // mins
 #define INTERVAL_SEND_TEMP 5             // mins
-#define INTERVAL_REFRESH_SETTINGS 3      // mins
+#define INTERVAL_REFRESH_SETTINGS 2      // mins
 #define INTERVAL_SEND_COMBI_RF_BACKUP 10 // mins
 
 #define DELAY_MEASUREMENT 2000
@@ -33,12 +33,12 @@
 const String DEVICE_ID = "qwer1234";
 const char *DEVICE_ID_CHR = "qwer1234";
 
-const char *API_USERNAME = "kc_device"; // basic auth
-const char *API_PASSWORD = "KombiCim";
+const char *API_USERNAME = "xxxxxxx"; // basic auth
+const char *API_PASSWORD = "yyyyyyy";
 
-String host = "http://xxxxxxxxx/KombiCim/Arduino/api/Settings?deviceId=" + DEVICE_ID;
-String hostSendWeather = "http://xxxxxxxxx/KombiCim/Arduino/api/Weather";
-String hostSendCombiLog = "http://xxxxxxxxx/KombiCim/Arduino/api/Log/PostCombiLog";
+String host = "http://xxxxxxxxx/Settings?deviceId=" + DEVICE_ID;
+String hostSendWeather = "http://xxxxxxxxx/Weather";
+String hostSendCombiLog = "http://xxxxxxxxx/Log/PostCombiLog";
 
 unsigned long previousMillisSendTemp = 0;
 unsigned long intervalSendTemp = INTERVAL_SEND_TEMP * 60 * 1000;
@@ -73,18 +73,23 @@ unsigned long minCombiChange = MIN_COMBI_CHANGE * 60 * 1000;
 
 void setup()
 {
+#ifdef DEBUG_USB
+  Serial.begin(9600);
+#endif
+
+  WiFi.mode(WIFI_STA);
   WiFi.begin(WIFI_SSID, WIFI_PASS);
 
   while (WiFi.status() != WL_CONNECTED)
   {
     delay(500);
+    SerialLog("Waiting for Wi-Fi..");
   }
+  SerialLog("Connected to Wi-Fi!");
 
   delay(100);
   dht.begin();
   delay(100);
-
-  Serial.begin(9600);
 
   delay(100);
   refreshSettings();
@@ -161,9 +166,11 @@ void refreshSettings()
   client.begin(host);
 
   int httpCode = client.GET();
+  SerialLog("RefreshSettings HttpCode: " + String(httpCode));
   if (httpCode == 200)
   {
     String contents = client.getString();
+    SerialLog("Contents: " + contents);
     client.end();
     settingsManager.Refresh(contents);
   }
@@ -171,7 +178,8 @@ void refreshSettings()
 
 void combiControl()
 {
-  if (settingsManager.settings.Mode == settingsManager.MODE_AUTO_PROFILE_1)
+  SerialLog("Settins Mode: " + settingsManager.settings.Mode);
+  if (settingsManager.settings.Mode == settingsManager.MODE_AUTO_PROFILE)
   {
     temperatures[measurementIndex] = dht.readTemperature();
     delay(DELAY_MEASUREMENT);
@@ -205,31 +213,60 @@ void combiControl()
         delay(DELAY_MEASUREMENT);
         float temp3 = dht.readTemperature();
         delay(DELAY_MEASUREMENT);
-        
+
         avgTemp = (temp1 + temp2 + temp3) / (float)3;
       }
-      float difference = avgTemp - settingsManager.settings.MinTemperature;
-      
-      SerialLog("CurrentTemp: " + String(avgTemp));
-      SerialLog("MinTempValue: " + String(settingsManager.settings.MinTemperature));
-      SerialLog("Difference: " + String(difference));
 
-      if (difference <= -0.15)
-        rfTransmitCombiControl(1, RF_SEND_COUNT);
-      else if (difference >= 0.19)
-        rfTransmitCombiControl(0, RF_SEND_COUNT);
-      else
+      SerialLog("AvgTemp: " + String(avgTemp));
+
+
+      if (avgTemp != 0)
       {
-        if (!firstRfSent)
+        float difference = avgTemp - settingsManager.settings.MinTemperature;
+
+        SerialLog("CurrentTemp: " + String(avgTemp));
+        SerialLog("MinTempValue: " + String(settingsManager.settings.MinTemperature));
+        SerialLog("Difference: " + String(difference));
+
+        if (difference <= -0.10)
         {
-          rfTransmitCombiControl(0, RF_SEND_COUNT);
+          if (combiState != 1 || !firstRfSent)
+            rfTransmitCombiControl(1, RF_SEND_COUNT);
+        }
+        else if (difference >= 0.10)
+        {
+          if (combiState != 0 || !firstRfSent)
+            rfTransmitCombiControl(0, RF_SEND_COUNT);
+        }
+        else
+        {
+          if (!firstRfSent)
+          {
+            rfTransmitCombiControl(0, RF_SEND_COUNT);
+          }
         }
       }
     }
   }
   else if (settingsManager.settings.Mode == settingsManager.MODE_MANUAL_1)
   {
-    rfTransmitCombiControl(settingsManager.settings.State, RF_SEND_COUNT);
+    SerialLog("MODE_MANUAL_1");
+    SerialLog("CombiState: " + String(combiState));
+    SerialLog("settingsManager: " + String(settingsManager.settings.State));
+
+    if (combiState != settingsManager.settings.State || !firstRfSent)
+      rfTransmitCombiControl(settingsManager.settings.State, RF_SEND_COUNT);
+
+    SerialLog("State: " + String(settingsManager.settings.State));
+  }
+  else if (settingsManager.settings.Mode == settingsManager.MODE_AUTO_SERVER_PROFILE)
+  {
+    SerialLog("MODE_AUTO_SERVER_PROFILE");
+    SerialLog("CombiState: " + String(combiState));
+    SerialLog("settingsManager: " + String(settingsManager.settings.State));
+
+    if (combiState != settingsManager.settings.State || !firstRfSent)
+      rfTransmitCombiControl(settingsManager.settings.State, RF_SEND_COUNT);
 
     SerialLog("State: " + String(settingsManager.settings.State));
   }
@@ -247,7 +284,7 @@ void rfTransmitCombiControl(int isOpen, int sendCount)
   {
     driver.send((uint8_t *)msg, strlen(msg));
     driver.waitPacketSent();
-    delay(200);
+    delay(250);
   }
 
   firstRfSent = true;
@@ -281,6 +318,8 @@ void sendCombiLog(int isOpen)
     int httpCode = client.POST(jsonText);
     String contents = client.getString();
 
+    SerialLog("PostCombiLog Http: " + String(httpCode));
+    SerialLog("PostCombiLog Contents: " + contents);
     SerialLog("CurrentCombiState: " + String(isOpen));
 
     previousCombiChange = millis();
